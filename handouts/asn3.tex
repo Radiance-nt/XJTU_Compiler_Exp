@@ -1,0 +1,258 @@
+\documentstyle[11pt,handout]{article}
+%
+% Copyright (c) 1995-1996 by Alex Aiken.  All rights reserved.
+% Permission is granted to modify and distribute this document for
+% for non-commercial purposes, so long as this copyright notice is retained
+% in all copies.
+%
+\input{mymargins}
+\input{macros}
+\begin{document}
+\handout{6}{9}{Programming Assignment III \\ 
+Due Thursday, October 12}
+
+% Three macros for defining:
+% 	Unix elements: filenames and program (sans serif)
+%	Cool elements: literal tokens (typewriter)
+%	C elements: function and variable names (boldface)
+%
+\def\U#1{{\sf{}#1}}
+\def\S#1{{\tt{}#1}} % NB: we often use \verb+...+ for this also
+\def\C#1{{\bf{}#1}}
+
+\section{Introduction}
+
+In this assignment you will write a parser for Cool.  The assignment
+makes use of two tools: the parser generator \U{bison} and a package
+for generating and manipulating trees.  You will not use use the
+generating part of the package, but only the manipulators of a
+(already generated) tree definition we will give you. The output of
+your parser will be an abstract syntax tree (AST).  The AST will be
+constructed using \U{bison}'s semantic actions.
+
+You certainly will need to refer to the syntactic structure of Cool,
+found in Figure 1 of the CoolAid, as well as other portions of the
+reference manual.  There is a chapter on \U{bison} in the course
+reader.  There is also a section in the textbook on \U{yacc}, which is
+a close relative of \U{bison}.  The tree package is described in the
+{\em Tour} handout.  You will need the tree package information for this and
+future assignments.
+
+There is a lot of information in this handout and you need to know most of
+it to write a working parser.  Please read the handout thoroughly.
+
+\section {Files and Directories}
+
+To get the assignment type
+\begin{verbatim}
+gmake -f ~cs164/assignments/PA3/Makefile
+\end{verbatim}
+in a directory named \U{PA3}.  This command copies a number
+of files to your directory, some of them with read-only permission.
+As usual, you should not modify files that are read-only.  If you
+insist on making your own versions of these files, you are on your own.
+If your code doesn't compile with the original files (including the original
+\U{Makefile}) you will receive little credit, because your program will fail
+all of the automatically run test cases.
+Please read and follow the directions in the \U{README} file.
+
+The files that you need to modify are:
+\begin{itemize}
+
+\item \U{cool.y} \\
+This file contains a start towards a parser description for Cool.
+You will need to add more rules.
+The section before the first \S{\%\%} is mostly complete;
+all you need to do is add \S{\%type} declarations for new nonterminals.
+(We have given you names and \S{\%type} declarations for the terminals.)
+The rule section is very incomplete.
+
+\item \U{good.cl} and \U{bad.cl} \\
+These test a few features of the grammar.  You should add tests to
+ensure that \U{good.cl} exercises every legal construction of the
+grammar and that \U{bad.cl} exercises as many types of parsing errors
+as possible in a single file.  Explain your tests in these files and
+put any overall comments in the \U{README} file.
+
+\item \U{README} \\
+As usual, 
+this file will contain the write-up for your assignment.
+Explain your design decisions, your test cases, and why you believe your
+program is correct and robust.
+It is part of the assignment to explain things in text as well as to
+comment your code.
+Make sure that the name, student ID, and login of each
+group member is in the \U{README} file.
+\end{itemize}%
+
+
+The files that your code will link with and include, but that you should
+not modify, are:
+\begin{itemize}
+\item \U{parsetest.cc} \\
+This file contains a simple driver for the parser.
+
+\item \U{cool-tree.aps} \\
+This file is a specification of the Cool tree language written in
+a special language.  It defines a type system and describes the kinds
+of nodes used for the abstract syntax trees.
+
+\item \U{cool.h}, \U{cool-tree.h}, \U{cool-tree.handcode.h}, and \U{tree.h} \\
+The header file \U{cool.h} defines basic types used by the compiler.
+The other files define the routines that let you create and examine
+abstract syntax trees and lists of trees.
+It may interest you that the second file was automatically generated from
+\U{cool-tree.aps}.
+
+\item \U{dumptype.cc} \\
+This file implements a routine for printing out ASTs.  The algorithm used
+illustrates the  use of virtual functions to recursively traverse of an AST; you will need to write algorithms in a similar style in future assignments.
+
+\item \U{handle\_files.cc} \\
+This file implements a simple mechanism for parsing multiple input files.
+
+\item \U{parsetest.a} \\
+This is the object code for \U{handle\_flags.cc} and \U{handle\_files.cc}.
+
+\item \U{lexer.a} \\
+This is the object code for the \U{coolc} lexical analyzer.
+
+\item \U{mylexer.a} \\
+This is an alternative to \U{lexer.a}.  Use this library if you
+want to run the parser with your own lexical analyzer (see \U{README}
+for details).
+ 
+\end{itemize}%
+
+{\bf Important:} All software supplied with this assignment is supported on both
+the HP and DEC machines.  Remember to run \U{gmake clean} if you switch
+architectures.  To make sure your code will link correctly on both architectures,
+you should place \U{~cs164/bin} at the beginning of your \U{PATH} variable.
+
+\section{Testing the Parser}
+
+You will need a working scanner to test the parser.  You may use either
+your own scanner or the \U{coolc} scanner.  See the \U{README}
+file for instructions on how to build a working parser either way.
+Don't automatically assume that the scanner (whichever one you use!) is bug
+free---latent bugs in the scanner may cause mysterious problems in the
+parser.  
+
+Note that \U{parsetest} has a \U{-p} flag for debugging
+the parser; using this flag causes lots of information about what the
+parser is doing to be printed on \S{stdout}.  In addition, the \U{-l}
+flag is available for generating debugging output from the
+scanner.  Using these two flags together is sometimes useful for
+isolating strange behavior in the parser.
+
+Once you are confident that your parser is working, try \U{make mycoolc} to
+build a complete compiler that includes your parser.  You should
+test this compiler on both good and bad inputs to see if everything is working.
+Remember, bugs in your parser may manifest themselves anywhere.
+
+Your parser will be graded using our lexical analyzer.  Thus,
+even if you do most of the work using your own scanner you should test
+your parser with the \U{coolc} scanner before turning in the assignment.
+As always, type \S{make turnin} to turn in your assignment; see the
+\U{README} file.
+
+\section{Parser Output}
+
+Your semantic actions should build an AST for the input.  The root
+(and only the root) of the AST should be of type \S{Program}. The
+semantic action for the start symbol assigns the root of the AST
+to a global variable \S{ast\_root} (also of type \S{Program}, of course).
+For programs that parse successfully, the output of \S{parsetest} is
+a listing of the AST.
+
+For programs that have errors, the output is the error messages of the
+parser.  We have supplied you with a function \S{yyerror} in 
+\U{cool.y} that prints error messages in a standard format; please 
+do not modify this function.  You should not invoke \S{yyerror} directly
+in the semantic actions; \S{bison} automatically invokes \S{yyerror} 
+when it detects a problem.
+
+Your parser need only work for programs contained in a single file---don't
+worry about compiling multiple files.
+
+\section{Error Handling}
+
+You should use \U{bison}'s \S{error} pseudo-nonterminal to add error
+handling capabilities in the parser.  The purpose of \S{error} is to
+permit the parser to continue after some anticipated error.  It is not
+a panacea and the parser may become completely confused.  See the
+\U{bison} documentation for how best to use \S{error}.  In your
+\U{README}, describe which errors you attempt to catch.  Your test
+file \U{bad.cl} should have some instances that illustrate the errors
+from which your parser can recover.  To receive full credit, you
+parser should recover in at least the following situations:
+\begin{itemize}
+
+\item If there is an error in a class definition but the class is
+terminated properly and the next class is syntactically correct,
+ the parser should be able to restart at the next class definition.
+
+\item Similarly, the parser should recover from errors in features
+(going on to the next feature), a {\tt let} binding (going on to the next
+variable), and an expression inside a {\tt begin-end} block.
+
+\end{itemize}
+
+Do not be overly concerned about the the line numbers that appear in
+the error messages your parser generates.  If your parser is working
+correctly, the line number will generally be the line where the error
+occurred.  For erroneous constructs broken across multiple lines, the
+line number will probably be the last line of the construct.
+
+\section{The Tree Package}
+\label{sec-tree}
+
+There is an extensive discussion of the APS tree package for Cool abstract
+syntax trees in the {\em Tour}.  You will need most of that information
+to write a working parser.
+
+\section {Remarks}
+
+You may use \U{bison}'s precedence declarations, but only for expressions.
+Do not use precedence declarations blindly---do not respond
+to a shift-reduce conflict in your grammar by adding precedence
+rules until it goes away.  If you find yourself making up rules for
+things other than operators in expressions,
+you are probably doing something wrong.
+
+You must declare \S{bison} ``types'' for your non-terminals and terminals that
+have attributes.  For example, in the skeleton \U{cool.y}
+is the declaration:
+\begin{verbatim}
+%type <class_> class
+\end{verbatim}
+This declaration says that the non-terminal \S{class} has type \S{<class\_>}.
+The use of the word ``type'' is misleading here; what it really means is that
+the attribute for the non-terminal \S{class} is stored in the \S{class\_}
+member of the \S{union} declaration in \U{cool.y}, which has type
+\S{Class\_}.   By specifying the type  
+\begin{verbatim}
+%type <member_name> X Y Z ...
+\end{verbatim}
+you instruct \C{bison} that the attributes of non-terminals (or terminals)
+{\tt X}, {\tt Y}, and {\tt Z} have a type appropriate for the member
+{\tt member\_name} of the union.
+
+All the union members and their types have similar names by
+design.  It is a coincidence in the example above that the non-terminal \S{class}
+has the same name as a union member.
+
+It is critical that you declare the correct types for 
+the attributes of grammar symbols; failure to do so virtually guarantees
+that your parser won't work.  You do not need to declare types for
+symbols of your grammar that do not have attributes.
+
+The \U{g++} type checker complains if you use the tree constructors with the
+wrong type parameters.  If you ignore the warnings, your program may
+crash when the constructor notices that it is being used incorrectly.
+Moreover, \U{bison} may complain if you make type errors.
+Heed any warnings.  Don't be surprised if your program crashes when
+\U{bison} or \U{g++} give warning messages.
+
+\end{document}
+

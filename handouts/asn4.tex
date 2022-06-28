@@ -1,0 +1,343 @@
+\documentstyle[11pt,handout]{article}
+%
+% Copyright (c) 1995-1996 by Alex Aiken.  All rights reserved.
+% Permission is granted to modify and distribute this document for
+% for non-commercial purposes, so long as this copyright notice is retained
+% in all copies.
+%
+\input{mymargins}
+\input{macros}
+\begin{document}
+
+\handout{9}{6}{Programming Assignment IV \\
+Due Tuesday, November 7}
+
+% Three macros for defining:
+% 	Unix elements: filenames and program (sans serif)
+%	Sather164 elements: literal tokens (typewriter)
+%	C elements: function and variable names (boldface)
+%
+\def\U#1{{\sf{}#1}}
+\def\S#1{{\tt{}#1}} % NB: we often use \verb+...+ for this also
+\def\C#1{{\bf{}#1}}
+
+
+\section{Introduction} 
+
+In this assignment you will implement the static semantics of Cool.
+You will use the abstract syntax trees (AST) built by
+your parser from assignment 3 to check that a program is in conformance
+with the Cool specification. Your static semantic
+component should reject erroneous programs; for correct programs, it
+must gather certain information for use by the code generator.
+
+This assignment has much more room for design
+decisions than previous assignments. Your program is correct if it checks
+programs against the specification. There is no ``right'' way to do
+the assignment, but there are wrong ways. There are a number of
+standard practices which we think make life easier and we will try to
+convey them to you. However, what you do is largely up to you.
+Whatever you decide to do, be prepared to justify your solution.
+
+You will need to refer to the typing rules, identifier scoping rules,
+and other restrictions of Cool as defined in the
+CoolAid.  You will also need to add methods and data members to the 
+AST class definitions for this phase.  The functions
+the tree package provides are documented in the handout for programming
+assignment 3 and in the header files \U{cool-tree.h} and \U{tree.h}.
+You can modify the class definitions by changing either
+\U{cool-tree.h} or \U{cool-tree.handcode.h} (the latter is {\tt \#included}
+by the former).
+
+\section{Files and Directories}
+
+To get the assignment type
+\begin{verbatim}
+make -f ~cs164/assignments/PA4/Makefile
+\end{verbatim}
+in an appropriate directory.  This command copies a number
+of files to your directory, some of them with read-only permission.
+As usual, you should not modify files that are read-only.
+Please read and follow the directions in the \U{README} file.
+
+The files that you will need to modify are:
+\begin{itemize}
+
+\item \U{semant.cc}
+This file contains a start on a semantic analysis phase, written in C++.
+Put the code for your semantic analysis phase in this
+file.  The skeleton only includes things required to
+correctly meet the interface with the code generator.  (This interface
+is discussed in detail below.)  Very little of real interest is
+included.  Unlike previous assignments, this skeleton doesn't even compile.
+
+\item \U{semant.h}
+This file is the header file for \U{semant.cc}.
+
+\item \U{cool-tree.handcode.h}, \U{cool-tree.h}
+These files are where user-defined extensions to the abstract syntax
+tree nodes are placed.  You can modify either file, but you will probably
+find it easiest to modify \U{cool-tree.h}.  
+You may add new \C{\#define} statements,
+but do not modify the existing declarations, except for the \C{{\em class}\_EXTRA}
+macros.  You may add any fields you wish to the \C{{\em class}\_EXTRA} macros.
+
+\item \U{symtab.h} \\
+This file contains code for a simple symbol table module.
+You are not required to modify these files, but you are free to do so if the symbol
+table manager does not meet your needs.  
+For example, you may wish to change the \C{SymtabEntry} template in
+\U{symtab.h} to add information to the symbol table.
+Document any changes you make to the original code.
+
+\item \U{good.cl} \U{bad.cl} \\
+These files test a few semantic features.
+You should add tests to ensure that \U{good.cl} exercises as many legal
+semantic combinations as possible and that \U{bad.cl} exercises as many
+kinds of semantic errors as possible.  It is not possible to exercise
+all possible combinations in one file; you are only responsible for
+achieving reasonable coverage.  Explain your tests in these files and put
+any overall comments in the \U{README} file.
+
+\item \U{README} \\
+This file will contain the write-up for your assignment.  For this
+assignment it is critical that you explain design decisions, how your
+code is structured, and why you believe that the design is a good one
+(i.e., why it leads to a correct and robust program).  It is part of
+the assignment to explain things in text as well as to comment your
+code.  Inadequate README files will be penalized more heavily in this
+assignment, as the README is the major guideline we have to
+understanding your code.
+
+Make sure that the name, student ID, and login of each
+group member is in the \U{README} file.
+\end{itemize}
+
+As usual, there are other files used in the assignment that are symbolically
+linked to your directory or are included from \U{~cs164/include/PA4}.
+You should not modify these files.
+Almost all of these files have have been described in previous assignments.
+The exceptions are \U{ast.flex} and\U{ast.y}, which implement
+lexical analysis and parsing for a textual representation of Cool ASTs.
+Recall that there are two versions of \U{coolc}: a normal executable
+and a shell script that glues separate parser, semantic analysis, and
+code generation phases together via pipes.  Each phase uses \U{dumptype}
+to print the AST to the pipe, and the next phase uses the AST parser
+to reconstruct the tree data structure.\footnote{One may wonder: Why
+have two versions of \U{coolc}?  The ``phased'' version of
+\U{coolc} greatly simplifies the structure of the programming assignments by
+removing the need to guarantee that your code for one phase link with all 
+components for other phases of the course compiler.}
+
+All software supplied with this assignment is supported on both
+the HP and DEC machines.  Remember to run \U{gmake clean} if you switch
+architectures. 
+
+\section{Testing the Semantic Analyzer}
+
+You will need a working scanner and parser to test your semantic analyzer.
+There is a script \U{mysemant} that combines a scanner, parser,
+and your semantic analyzer.
+See the \U{README} file for instructions on how to use either your own
+components or the components from \U{coolc}.  It is wise to test your
+semantic analyzer with the \U{coolc} scanner and parser at least once,
+because we will grade your semantic analyzer using \U{coolc}'s scanner
+and parser.
+
+Once you are confident that your semantic analyzer is working, you
+should test \U{mycoolc} on both good and bad inputs to see if everything 
+is working.
+Remember, bugs in the semantic analyzer may manifest themselves in the
+code generated or only when the compiled program is executed under
+\U{spim}.
+
+The \U{-p} and \U{-l} flags are available for debugging information
+from the lexer and the parser.  These flags are unlikely to be of much
+use in the semantic analyzer.  We have provided you with a \U{-s} flag
+for debugging you semantic analyzer; see the \U{README} file for instructions
+on how to use this flag.
+
+\section{Tree Traversal}
+
+As a result of assignment 3, your parser builds abstract syntax trees.
+The file \U{dumptype.cc} illustrates how to traverse the AST and gather
+information from it. This algorithmic style---a recursive traversal of
+a complex tree structure---is very important, because it is a very natural
+way to structure many computations on ASTs.
+
+Your programming task for this assignment is to
+1) traverse the tree, 2) manage various pieces of information that you
+glean from the tree, and 3) use that information to enforce the
+semantics of Cool.  One traversal of the AST is called a ``pass''.
+You must make at least two passes (and probably more) over the
+AST to check everything.
+
+There is a place in the AST for you to attach customized information. In
+\U{cool-tree.handcode.h} there is are \C{{\em class}\_EXTRA} macros.
+The AST constructors contain the members listed in the \C{{\em class}\_EXTRA}
+macro for each AST node of type {\em class}.  You may add members to the macros
+to make nodes of that type hold whatever information you wish. You may 
+also modify \U{cool-tree.h} directly.
+
+\section{Inheritance}
+
+Inheritance relationships specify a directed graph of class
+dependencies.  A typical requirement of most languages with
+inheritance is that the inheritance graph be acyclic.
+It is up to your semantic checker to enforce this requirement. One
+fairly easy way to do this is to construct a representation of the
+type graph and then check for cycles.
+
+In addition, Cool has restrictions on inheriting from the basic classes
+(see the manual).  It is also an error if class \U{A}
+inherits from class \U{B} but class \U{B} is not defined.
+
+The skeleton \U{semant.cc} includes appropriate definitions of all the
+basic classes. You will need to incorporate these classes into the
+inheritance hierarchy.
+
+We suggest that you divide your semantic analysis phase into two
+smaller components.  First, check that the inheritance graph is
+well-defined, meaning that all the restrictions on inheritance are
+satisfied.  If the inheritance graph is not well-defined, it is
+acceptable to abort compilation (after printing appropriate error
+messages, of course!).  Second, check all the other semantic
+conditions.  It is much easier to implement this second component if
+one knows that the inheritance graph is legal.
+
+
+\section{Naming and Scoping}
+
+A major portion of any semantic checker is the management of names.
+The specific problem is determining which declaration is in effect for
+each use of an identifier, especially when names can be reused. For
+example, if \C{i} is declared in two \U{let} expressions, one nested within the
+other, then wherever \C{i} is referenced  the semantics of the language
+specify which declaration is in effect.  It is the job of the semantic
+checker to keep track of which declaration a name refers to.
+
+As discussed in class, a {\em symbol table} is usually used to manage names.
+We provide a module to manage symbols and you
+are free to do with it as you like. Our module allows you to enter, exit
+and augment scopes as needed.
+
+Besides the identifier \C{self}, which is implicitly bound in every class,
+there are four ways that an object name can be introduced in Cool:
+\begin{itemize}
+\item attribute definitions
+
+\item formal parameters of methods
+
+\item let expressions
+
+\item branches of case statements
+\end{itemize}
+
+In addition to object names, there are also method names and class names.
+It is, of course, an error to use any name that has no matching declaration.
+
+Remember that neither classes, methods, nor attributes need be
+declared before use.  Think about how this affects your analysis.
+
+
+\section{Type Checking}
+
+Type checking is another major function of the semantic analyzer.
+The semantic analyzer must check that valid types are declared where
+required.  For example, the return types of methods must be declared.
+Using this information, the semantic analyzer must also verify that every
+expression has a valid type according to the type rules.  The type rules
+are discussed in detail in the CoolAid and the course lecture notes.
+
+One difficult issue is what to do if an expression doesn't have a
+valid type according to the rules.  First, an error message should be
+printed with the line number and a description of what went wrong.  It
+is relatively easy to give informative error messages in the semantic
+analysis phase, because it is generally obvious what the error is.  We
+expect you to give informative error messages.  Second, the semantic analyzer
+should attempt to recover and continue.  A good semantic analyzer
+will avoid cascading errors using any of several standard techniques.
+We do expect your semantic analyzer to recover, but we do not expect
+it to avoid cascading errors.  A simple recovery mechanism is to assign 
+the type \U{Object} to any expression that cannot otherwise be given a 
+type (we used this method in \U{coolc}).
+
+\section{Code Generator Interface}
+
+For the semantic analyzer to work correctly with the rest of the \U{coolc}
+compiler, some care must be taken to adhere to the interface with the
+code generator.  We have deliberately adopted a very simple, naive interface to
+avoid cramping your creative impulses in semantic analysis.  However, there
+is one thing you must do.
+For every expression node, its \U{type} field (defined in \U{cool-tree.handcode.h})
+must be set to the \U{Symbol} naming the type inferred by your type
+checker.  This
+\U{Symbol} must be the result of the \U{add\_string} method of the
+\U{idtable}.  The special expression \U{no\_expr} must be assigned the
+type \U{No\_type}.
+
+\section{Output and Grading}
+
+For incorrect programs, the output of semantic analysis is error
+messages.  You are expected to recover from all errors except for
+ill-formed class hierarchies.  You are also expected to produce
+complete and informative errors.  Assuming the inheritance hierarchy
+is well-formed, the semantic checker should catch and report all
+semantic errors in the program.  When in doubt, use
+\C{coolc} as a guide in determining what informative error messages
+should say.  Your error messages need not be identical to those of
+\C{coolc}.
+
+We have supplied you with a simple error reporting method
+\C{semant\_error}.  This routine takes a filename and the AST node where
+the error occurred, and it returns the error stream after it has
+printed an error header.  The filename should be the file in which the
+error occurs.  The driver in \U{semanttest.c} sets the global
+\C{curr\_filename} to the file in which parsing is taking place; this
+name is used when creating \U{Class\_} nodes to record the filename.
+Thus, the \U{Class\_} nodes store the file in which the class was
+defined (recall that class definitions cannot be split across files).
+In an error message, the line number of the error message is obtained
+from the AST node where the error is detected and the file name is
+obtained from the enclosing class.
+
+For correct programs, the output is a type-annotated abstract syntax
+tree.  You will be graded on whether your semantic phase correctly
+annotates ASTs with types and on whether your semantic phase works
+correctly with the {\tt coolc} code generator.
+
+You are also expected to program in good, structured style.  You
+should spend some time thinking about the class definitions you will
+use.
+
+\section{Remarks}
+
+The semantic analysis phase is by far the largest component of the compiler
+so far.  Our solution is approximately 1300 lines of well-documented C++.
+You will find the assignment easier if you take some time to design the
+semantic checker prior to coding.  Ask yourself:
+\begin{itemize}
+\item What requirements do I need to check?
+\item When do I need to check a requirement?
+\item When is the information needed to check a requirement generated?
+\item Where is the information I need to check a requirement?
+\end{itemize}
+If you can answer these questions for an aspect of Cool, implementing
+a solution should be straightforward.
+At a high level, your semantic checker will have to perform the
+following major tasks:
+\begin{enumerate}
+\item Gather all classes.
+\item Build an inheritance graph.
+\item Check that the graph is well-formed.
+\item For each class
+\begin{enumerate}
+\item Traverse the AST, gathering all visible declarations in a symbol table.
+\item Check each expression for type correctness.
+\end{enumerate}
+\end{enumerate}
+This list of tasks is not exhaustive; it is up to you to faithfully implement
+the specification in the manual.
+
+\end{document}
+

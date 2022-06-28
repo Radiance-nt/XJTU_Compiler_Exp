@@ -1,0 +1,1 @@
+./lexer $* | ./parser $* | ./semant $* | ./cgen $*

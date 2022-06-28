@@ -1,0 +1,205 @@
+% generally useful macros for writing
+\newcommand{\TexDir}{/home3/aiken/tex}
+
+% These allow switching interline spacing; the change takes effect immediately:
+
+\makeatletter
+\newcommand{\singlespacing}{\let\CS=\@currsize\renewcommand{\baselinestretch}{1}\tiny\CS}
+\newcommand{\oneandahalfspacing}{\let\CS=\@currsize\renewcommand{\baselinestretch}{1.25}\tiny\CS}
+\newcommand{\doublespacing}{\let\CS=\@currsize\renewcommand{\baselinestretch}{1.5}\tiny\CS}
+%setspacingto sets the interline spacing to the value of its argument
+% e.g., \setspacingto{1.5} is the same as \doublespacing
+\newcommand{\setspacingto}[1]{\let\CS=\@currsize\renewcommand{\baselinestretch}{#1}\tiny\CS}
+\makeatother
+
+% nonumber
+\newcommand{\nn}{\nonumber}
+
+% Tab for hand-formatting:
+\newcommand{\tab}{\hspace*{2em}}
+
+% Angle brackets:
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+
+% s.t.
+\newcommand{\st}{\mbox{\ s.t.\ }}
+
+% otherwise
+\newcommand{\ow}{\m{\rm otherwise}}
+
+% if
+\newcommand{\mif}{\m{\rm if\ }}
+
+% Harpoons
+\newcommand{\rh}{\rightharpoonup}
+\newcommand{\lh}{\leftharpoonup}
+
+% Denotational-semantics-style brackets and bottom:
+\newcommand{\lbk}{\lbrack\!\lbrack}
+\newcommand{\rbk}{\rbrack\!\rbrack}
+\newcommand{\bottom}{\perp}
+
+% Projection operator
+\newcommand{\proj}{\!\downarrow\!}
+
+% macros for mbox combined with another style
+% (useful for changing typefaces in math mode)
+\newcommand {\mboxbf}[1]{\mbox{{\bf #1}}}
+\newcommand {\mboxit}[1]{\mbox{{\it #1}}}
+\newcommand {\mboxem}[1]{\mbox{{\em #1}}}
+\newcommand {\m}{\mbox}
+\newcommand {\ch}{\rm}
+	
+% macro for creating a binary operator
+%
+% example:  \makebinop{\makebinop{\mybmod}{mod}
+%	(duplicates the \bmod macro)
+%
+\def\makebinop#1#2{\def#1{\mskip-\medmuskip \mskip5mu
+\mathbin{\rm #2} \penalty900 \mskip5mu \mskip-\medmuskip}}
+
+% Environments for theorems, lemmas, etc.
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{fact}{Fact}[theorem]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{constraint}[theorem]{Constraint}
+\newtheorem{axiom}[theorem]{Axiom}
+\newtheorem{law}[theorem]{Law}
+\newtheorem{algorithm}[theorem]{Algorithm}
+\newtheorem{invariant}[theorem]{Invariant}
+
+% Definition of the proof-environment:
+\newenvironment{proof}{{\bf Proof:}\quad}{$\Box$}
+
+% Definition of an eqnarray-like environment with an extra
+% column for comments
+\newcommand{\eeqnarray}[1]{\[\begin{array}{rcll} #1 \end{array}\]}
+
+% Definition of a eqnarray-like environment for proofs of the
+% form 
+%     init     
+%=>   step1   reason1
+%=>   step2   reason2
+%...
+\newcommand{\peqnarray}[1]{\[\begin{array}{cll} #1 \end{array}\]}
+
+%
+% An environment for formatting programs. 
+%
+%	written by Hal Perkins
+%	adapted by Charles Elkan	9/3/86
+%	keyword macros by Anne Neirynck
+%
+% Usage :
+%
+% \begin{program}
+% program text\\
+% program text
+% \end{program}
+%
+% The program environment is a tabbing environment with ten tab stops spaced
+% evenly from the left of the page.  Initially the left margin is the second
+% tab stop.  Use \+ to indent following lines one more tab stop, \- to undo
+% the effect of \+, and \> at the beginning of a line to indent an extra tab.
+
+\newlength{\pgmtab}          %  \pgmtab is the width of each tab in the
+\setlength{\pgmtab}{2em}     %  program environment
+
+% boxed program is like program, only boxed!
+% This is useful for centering programs and preventing page breaks in programs.
+% argument t or b is required.
+
+\newenvironment{boxed-program}[1]{\begin{minipage}[#1]{9in}
+\begin{tabbing}\hspace{\pgmtab}\=\hspace{\pgmtab}\=%
+\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=%
+\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=%
+\hspace{\pgmtab}\=%
+\kill}{\end{tabbing}\end{minipage}}
+
+\newenvironment{program}{\begin{tabbing}\hspace{\pgmtab}\=\hspace{\pgmtab}\=%
+\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=%
+\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=\hspace{\pgmtab}\=%
+\hspace{\pgmtab}\=%
+\+\+\kill}{\end{tabbing}}
+
+% The following commands should be used OUTSIDE math mode
+
+\newcommand {\FUNCTION}{{\bf function\ }}
+\newcommand {\BEGIN}{{\bf begin\ }}
+\newcommand {\END}{{\bf end}}
+\newcommand {\CASE}{{\bf case}}
+\newcommand {\OF}{{\bf of}}
+\newcommand {\SELECT}{{\bf select\ }}
+\newcommand {\WHERE}{{\bf where\ }}
+\newcommand {\DECLARE}{{\bf declare\ }}
+\newcommand {\ARRAY}{{\bf array\ }}
+\newcommand {\LET}{{\bf\ let\ }}
+\newcommand {\IN}{{\bf\ in\ }}
+\newcommand {\IF}{{\bf if\ }}
+\newcommand {\THEN}{{\bf then\ }}
+\newcommand {\ELSE}{{\bf else\ }}
+\newcommand {\SKIP}{{\bf skip\ }}
+\newcommand {\DO}{{\bf do\ }}
+% OLD---don't use \OD
+\newcommand {\OD}{{\bf od\ }}
+\newcommand {\BY}{{\bf by\ }}
+\newcommand {\LOOP}{{\bf loop\ }}
+\newcommand {\WHILE}{{\bf while\ }}
+\newcommand {\TO}{{\bf to\ }}
+\newcommand {\DOWNTO}{{\bf down to\ }}
+\newcommand {\FOR}{{\bf for\ }}
+\newcommand {\FOREACH}{{\bf for each\ }}
+\newcommand {\RETURN}{{\bf return\ }}
+\newcommand {\REPEAT}{{\bf repeat\ }}
+\newcommand {\UNTIL}{{\bf until\ }}
+\newcommand {\LCOM}{$(\ast \;$}
+\newcommand {\RCOM}{$\ast)$}
+\newcommand {\GOTO}{{\bf goto\ }}
+
+% The following commands are for use INSIDE math mode
+
+\newcommand {\OP}[1]{\mbox{\sc #1}}
+\newcommand {\op}[1]{\mbox{\sc #1}}
+\newcommand {\mm}[1]{\mbox{\rm #1}\;}
+\newcommand {\id}[1]{\mbox{\it #1\ }}
+
+\newcommand {\ASSIGN}{\leftarrow }
+\newcommand {\MIN}{\OP{min} }
+\newcommand {\MOD}{\; {\bf{\rm mod}} \; } 
+\newcommand {\LAMBDA}{{\bf \lambda\ }}
+\newcommand {\FALSE}{{\em FALSE\ }}
+
+% Miscellaneous notation
+
+\newcommand {\And}{\wedge}
+\newcommand {\Or}{\vee}
+
+\newcommand {\thus}{{\dot{. \: .}\;}}
+
+\newcommand {\bigO}[1]{{\cal O}(#1)}
+
+\newcommand {\app}{\!\!:\!}
+\newcommand {\hastype}{::}
+\newcommand{\hast}{:}
+\newcommand{\qt}[1]{\mbox{``#1''}}
+\newcommand{\TexComment}[1]{}
+
+\newcommand{\dq}{\m{\tt "}}
+\newcommand{\flatqt}[1]{\m{\dq #1 \dq}}
+\newcommand{\seq}{\subseteq}
+\newcommand{\derives}{\vdash}
+
+% for writing grammars
+\newcommand{\grammar}{::=}
+\newcommand{\gor}{\,|\,}
+
+% macros for writing inference rules
+\newcommand{\infrule}[2]{\displaystyle{\displaystyle\strut{#1}} \over %
+                                        {\displaystyle\strut {#2}}}
+\newcommand{\cinfrule}[3]{\parbox{14cm}{\hfil$\infrule{#1}{#2}$\hfil}\parbox{4cm}{$\,#3$\hfil}}

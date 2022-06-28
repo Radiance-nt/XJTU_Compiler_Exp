@@ -1,0 +1,35 @@
+PA3
+
+***You can specific your analyzer in `makefile` ***
+
+|目标|文件| Make Command|
+|-|-|-|
+|多位计算(加减乘除括号)|cal.l cal.y联合编译| make cal|
+|double计算(加减乘除括号)|float.l float.y联合编译|make float|
+|布尔运算(与或非括号)|bool.l bool.y联合编译|make bool|
+|一位数计算器(减法、乘法、赋值)|calculator_basic.y 单文件编译|make calculator_basic|
+|一位数计算器(加减乘除括号赋值)|calculator_advanced.y 单文件编译|make calculator_advanced|
+|多位数计算器(加减乘除括号赋值)|calculator_ultimate.y 单文件编译|make calculator_ultimate|
+
+
+- 联合编译命令
+
+```bash
+# flex 识别token
+flex -o ${file}.yy.c ${file}.l
+# bison生成.tab.h 定义token
+bison -d ${file}.y
+# bison生成.tab.c
+bison -o ${file}.tab.c ${file}.y
+# 生成可执行文件
+gcc -o ${file}.out ${file}.yy.c ${file}.tab.c
+```
+
+- 单文件编译命令
+
+```bash
+# bison生成.c
+bison -o ${file}.c ${file}.y
+# 生成可执行文件
+gcc -o ${file}.out ${file}.c
+```

@@ -1,0 +1,15 @@
+## Only check inherit_cycle
+
+Inherit from  [afterthat97/cool-compiler](https://github.com/afterthat97/cool-compiler)  :)
+
+    .
+    ├── examples
+    │   ├── inheritance_cycle.cl
+    │   └── inheritance_good.cl
+
+
+Usage:
+
+    make
+    ./run.sh examples/inheritance_cycle.cl
+    ./run.sh examples/inheritance_good.cl

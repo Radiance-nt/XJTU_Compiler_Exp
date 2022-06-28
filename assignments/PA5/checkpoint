@@ -1,0 +1,53 @@
+PA5 Checkpoint Questions
+------------------------
+
+The following are several questions which should help you to
+understand features of the project, and suggestions on how to better
+implement the project.  Answer them and submit by running 
+'submit PA5-checkpoint'
+
+
+Much of this project involves outputting code which properly interacts
+with the library code, which is documented both in the tour of the cool
+support files and as comments to the library code itself:
+~cs164/lib/trap.handler.
+
+
+1)  Which library functions will your generated code call directly?
+(Other functions in trap.handler, such as most garbage collector
+routines, are only called by other library functions.)  What is the
+calling convention for these library functions?
+
+
+
+
+2) How is your code supposed to interact with the garbage collector?
+What is the root set in the registers (i.e., what registers does it
+examine)?  How do you select which garbage collector is used?
+
+
+
+
+(Initially, you may choose to test your code generator without using a
+garbage collector.  After we discuss garbage collection in class, you
+should revisit these issues.  For instance, you should think about
+what kinds of values can be stored on the stack and in attributes.)
+
+
+3)  How does your program start up?
+
+
+
+
+4)  How does Cool perform arithmetic operations?
+
+
+
+
+5)  How do you turn a string reference into the appropriate string
+constant?  Same for an integer?
+
+
+
+
+
