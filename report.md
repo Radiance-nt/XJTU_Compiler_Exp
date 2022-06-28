@@ -14,7 +14,7 @@
 
 #### 安装`flex`, `bison`
 
-![image-20220628002628085](/home/radiance/.config/Typora/typora-user-images/image-20220628002628085.png)
+![image-20220628002628085](pics/image-20220628002628085.png)
 
 ```java
 class Main inherits IO
@@ -59,7 +59,7 @@ clean :
 	rm -f *.s core *~
 ```
 
-![image-20220628111915833](/home/radiance/.config/Typora/typora-user-images/image-20220628111915833.png)
+![image-20220628111915833](pics/image-20220628111915833.png)
 
 ## 实验二
 
@@ -322,9 +322,9 @@ lex:
 	rm lex.yy.c
 ```
 
-![image-20220627235113618](/home/radiance/.config/Typora/typora-user-images/image-20220627235113618.png)
+![image-20220627235113618](pics/image-20220627235113618.png)
 
-![image-20220627235222727](/home/radiance/.config/Typora/typora-user-images/image-20220627235222727.png)
+![image-20220627235222727](pics/image-20220627235222727.png)
 
 ## 实验三
 
@@ -378,7 +378,7 @@ int main(){
 }
 ```
 
-![image-20220628000524145](/home/radiance/.config/Typora/typora-user-images/image-20220628000524145.png)
+![image-20220628000524145](pics/image-20220628000524145.png)
 
 #### 统计统计给定程序文件的行数，列数和字数
 
@@ -407,9 +407,9 @@ default:
 
 
 
-![image-20220628000712941](/home/radiance/.config/Typora/typora-user-images/image-20220628000712941.png)
+![image-20220628000712941](pics/image-20220628000712941.png)
 
-![image-20220628000745443](/home/radiance/.config/Typora/typora-user-images/image-20220628000745443.png)
+![image-20220628000745443](pics/image-20220628000745443.png)
 
 #### 实现多重入口
 
@@ -456,7 +456,7 @@ int main()
 int yywrap() { return 1; }
 ```
 
-![image-20220628001019795](/home/radiance/.config/Typora/typora-user-images/image-20220628001019795.png)
+![image-20220628001019795](pics/image-20220628001019795.png)
 
 ## 实验四
 
@@ -656,9 +656,9 @@ int yywrap()
 }
 ```
 
-![image-20220628001954188](/home/radiance/.config/Typora/typora-user-images/image-20220628001954188.png)
+![image-20220628001954188](pics/image-20220628001954188.png)
 
-![image-20220628002006541](/home/radiance/.config/Typora/typora-user-images/image-20220628002006541.png)
+![image-20220628002006541](pics/image-20220628002006541.png)
 
 ## 实验五
 
@@ -680,9 +680,9 @@ YACC 是一个语法分析器的生成器，接受用 BNF 形式的 LALR(1) 文�
 
 Flex的主要用途之一就是与yacc分析生成器一起使用。yacc分析器将会调用名字为‘yylex()’的函数来获得下一个输入标识。该函数应该返回下一个输入标识的类型，并且将关联的值放在全局变量yyval中。若要使用与yacc一起使用flex，需要给yacc使用‘-d’选项，用来指示生成包含出现在yacc输入中的所有‘%tokans’的定义的文件‘y.tab.h’。然后将该文件包含在flex扫描器中。
 
-![image-20220628124529850](/home/radiance/.config/Typora/typora-user-images/image-20220628124529850.png)
+![image-20220628124529850](pics/image-20220628124529850.png)
 
-![image-20220628124540041](/home/radiance/.config/Typora/typora-user-images/image-20220628124540041.png)
+![image-20220628124540041](pics/image-20220628124540041.png)
 
 ### 实验步骤
 
@@ -771,7 +771,7 @@ single:
 
 ```
 
-![image-20220628011053025](/home/radiance/.config/Typora/typora-user-images/image-20220628011053025.png)
+![image-20220628011053025](pics/image-20220628011053025.png)
 
 #### 浮点数支持
 
@@ -785,7 +785,7 @@ single:
 %%
 ```
 
-![image-20220628010950254](/home/radiance/.config/Typora/typora-user-images/image-20220628010950254.png)
+![image-20220628010950254](pics/image-20220628010950254.png)
 
 ## 实验六
 
@@ -1002,7 +1002,7 @@ class Main inherits IO
 
 ```
 
-![image-20220628123746435](/home/radiance/.config/Typora/typora-user-images/image-20220628123746435.png)
+![image-20220628123746435](pics/image-20220628123746435.png)
 
 编写`bad.cl`
 
@@ -1034,7 +1034,7 @@ class Main inherits IO {
 
 
 
-![image-20220628121526974](/home/radiance/.config/Typora/typora-user-images/image-20220628121526974.png)
+![image-20220628121526974](pics/image-20220628121526974.png)
 
 ## 实验七
 
@@ -1051,7 +1051,7 @@ class Main inherits IO {
 
 ### 实验原理
 
-<img src="/home/radiance/.config/Typora/typora-user-images/image-20220628161730235.png" alt="image-20220628161730235" style="zoom:50%;" />
+<img src="pics/image-20220628161730235.png" alt="image-20220628161730235" style="zoom:50%;" />
 
 ### 实验步骤
 
@@ -1167,6 +1167,6 @@ class B inherits C {};
 class C inherits A {};
 ```
 
-![image-20220628162539837](/home/radiance/.config/Typora/typora-user-images/image-20220628162539837.png)
+![image-20220628162539837](pics/image-20220628162539837.png)
 
-![image-20220628162517056](/home/radiance/.config/Typora/typora-user-images/image-20220628162517056.png)
+![image-20220628162517056](pics/image-20220628162517056.png)
